@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { HomePage } from '../pages/HomePage';
-import { ProductCategoryPage } from '../pages/ProductCategoryPage';
+import { HomePage } from '../../pages/HomePage';
+import { ProductCategoryPage } from '../../pages/ProductCategoryPage';
 
 test.describe('Electrolux Product Category - Refrigerators Filter Test', () => {
   let homePage: HomePage;
