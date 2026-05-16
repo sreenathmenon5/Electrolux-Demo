@@ -13,13 +13,13 @@ export class HomePage extends BasePage {
   // Methods
   async navigateToHome(): Promise<void> {
     await this.goto(this.baseURL);
-    await this.page.waitForLoadState('networkidle',{timeout: 60000});
+    await this.page.waitForLoadState('domcontentloaded',{timeout: 60000});
   }
 
   async clickOnRefrigeratorCategory(): Promise<void> {
     // Navigate directly to refrigerators page
     await this.goto(this.refrigeratorsURL);
-    await this.page.waitForLoadState('networkidle',{timeout: 60000});
+    await this.page.waitForLoadState('domcontentloaded',{timeout: 60000});
   }
 
   async isHomePageLoaded(): Promise<boolean> {

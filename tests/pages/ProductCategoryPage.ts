@@ -39,7 +39,7 @@ export class ProductCategoryPage extends BasePage {
   // Methods
   async navigateToCategory(): Promise<void> {
     await this.goto(this.categoryURL);
-    await this.page.waitForLoadState('networkidle',{timeout: 60000});
+    await this.page.waitForLoadState('domcontentloaded',{timeout: 60000});
   }
 
   async isCategoryPageLoaded(): Promise<boolean> {
@@ -89,13 +89,13 @@ export class ProductCategoryPage extends BasePage {
   async clickFrenchDoorFilter(): Promise<void> {
     await this.waitForElement(this.frenchDoorFilterLink);
     await this.clickElement(this.frenchDoorFilterLink);
-    await this.page.waitForLoadState('networkidle',{timeout: 60000});
+    await this.page.waitForLoadState('domcontentloaded',{timeout: 60000});
   }
 
   async clickAllFilter(): Promise<void> {
     // Navigate back to the main refrigerators page (equivalent to "All" filter)
     await this.goto(this.categoryURL);
-    await this.page.waitForLoadState('networkidle',{timeout: 60000});
+    await this.page.waitForLoadState('domcontentloaded',{timeout: 60000});
   }
 
   async getFilteredProductCount(): Promise<number> {

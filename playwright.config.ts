@@ -21,17 +21,36 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 4 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter:[
+    ['html'],
+    ['list'],
+    ['allure-playwright'],
+  ],
+  /* Global timeout*/
+  timeout: 100 * 1000,
+  /*expect Timeout*/
+  expect: {
+    timeout: 10 * 1000
+  },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     headless: false,
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'http://localhost:3000',
-
+    /*Screenshot on failure*/
+    screenshot: 'only-on-failure',
+    /*Video on failure*/
+    video: 'retain-on-failure',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on',
+    trace: 'retain-on-failure',
+    /* Ignore HTTPS errors. */
+    ignoreHTTPSErrors: true,
+    /*Action Timeout*/
+    actionTimeout: 15*1000,
+    /*Navigation Timeout*/
+    navigationTimeout: 60*1000,
   },
 
   /* Configure projects for major browsers */

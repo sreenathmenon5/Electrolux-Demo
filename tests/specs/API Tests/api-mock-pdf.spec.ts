@@ -69,7 +69,7 @@ const clickFirstAvailableProduct = async (page: Page) => {
   const productLink = page.locator('.product-list-item_wrap-3 a, .product-list-item a').first();
   await expect(productLink).toBeVisible({ timeout: 20000 });
   await Promise.all([
-    page.waitForLoadState('networkidle'),
+    page.waitForLoadState('domcontentloaded'),
     productLink.click({ timeout: 20000 }),
   ]);
 };
@@ -163,8 +163,8 @@ test.describe('Electrolux API Validation', () => {
   });
 
   test('API_TC_002 Validate Product Details API', async ({ page }) => {
-    await page.goto(HOME_URL, { waitUntil: 'networkidle', timeout: 60000 });
-    await page.goto('https://www.electrolux.in/appliances/refrigerators/', { waitUntil: 'networkidle' });
+    await page.goto(HOME_URL, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    await page.goto('https://www.electrolux.in/appliances/refrigerators/', { waitUntil: 'domcontentloaded' });
 
     let detailResponsePromise = page.waitForResponse((response) => {
       const url = response.url().toLowerCase();
@@ -205,7 +205,7 @@ test.describe('Electrolux API Validation', () => {
       return isWarrantyUrl(url) && response.status() === 200 && response.headers()['content-type']?.includes('application/json');
     }, { timeout: 20000 }).catch(() => null);
 
-    await page.goto(WARRANTY_URL, { waitUntil: 'networkidle' });
+    await page.goto(WARRANTY_URL, { waitUntil: 'domcontentloaded' });
 
     const response = await warrantyResponsePromise;
 
@@ -248,7 +248,7 @@ test.describe.skip('Electrolux Network Mocking', () => {
       });
     });
 
-    await page.goto(HOME_URL, { waitUntil: 'networkidle', timeout: 60000 });
+    await page.goto(HOME_URL, { waitUntil: 'domcontentloaded', timeout: 60000 });
     await searchForKeyword(page, SEARCH_KEYWORD);
 
     // Check if mock product appears or search results appear
@@ -266,7 +266,7 @@ test.describe.skip('Electrolux Network Mocking', () => {
       await route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ error: 'Internal Server Error' }) });
     });
 
-    await page.goto(HOME_URL, { waitUntil: 'networkidle' });
+    await page.goto(HOME_URL, { waitUntil: 'domcontentloaded' });
     await searchForKeyword(page, SEARCH_KEYWORD);
 
     // Check for error message, retry button, or search results
@@ -284,7 +284,7 @@ test.describe.skip('Electrolux Network Mocking', () => {
       await route.continue();
     });
 
-    await page.goto(HOME_URL, { waitUntil: 'networkidle' });
+    await page.goto(HOME_URL, { waitUntil: 'domcontentloaded' });
 
     const spinner = page.locator('text=/loading|spinner|searching/i');
     const resultsSelector = page.locator('text=/refrigerator|results|product/i');
@@ -309,9 +309,9 @@ test.describe.skip('Electrolux Network Mocking', () => {
       return route.continue();
     });
 
-    await page.goto(HOME_URL, { waitUntil: 'networkidle' });
+    await page.goto(HOME_URL, { waitUntil: 'domcontentloaded' });
     await searchForKeyword(page, SEARCH_KEYWORD);
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForLoadState('domcontentloaded').catch(() => {});
 
     // Page should still load and be functional
     const bodyText = await page.locator('body').innerText();
@@ -324,7 +324,7 @@ test.describe.skip('Electrolux Network Mocking', () => {
 
 test.describe('Electrolux PDF Validation', () => {
   test('PDF_TC_001 Validate User Manual PDF Download', async ({ page }) => {
-    await page.goto(SUPPORT_URL, { waitUntil: 'networkidle' });
+    await page.goto(SUPPORT_URL, { waitUntil: 'domcontentloaded' });
 
     const pdfLink = page.locator('a[href$=".pdf"], a:has-text("Download Manual"), a:has-text("PDF")').first();
     
@@ -351,7 +351,7 @@ test.describe('Electrolux PDF Validation', () => {
   });
 
   test('PDF_TC_002 Validate PDF Content', async ({ page }) => {
-    await page.goto(SUPPORT_URL, { waitUntil: 'networkidle',timeout: 60000 });
+    await page.goto(SUPPORT_URL, { waitUntil: 'domcontentloaded',timeout: 60000 });
 
     const pdfLink = page.locator('a[href$=".pdf"], a:has-text("Download Manual"), a:has-text("PDF")').first();
     
@@ -375,7 +375,7 @@ test.describe('Electrolux PDF Validation', () => {
   });
 
   test('PDF_TC_003 Validate Broken PDF Links', async ({ page }) => {
-    await page.goto(SUPPORT_URL, { waitUntil: 'networkidle' });
+    await page.goto(SUPPORT_URL, { waitUntil: 'domcontentloaded' });
 
     const pdfLinks = page.locator('a[href$=".pdf"]');
     const count = await pdfLinks.count();
@@ -405,7 +405,7 @@ test.describe('Electrolux PDF Validation', () => {
   });
 
   test('PDF_TC_004 Validate Warranty PDF Data', async ({ page }) => {
-    await page.goto(WARRANTY_URL, { waitUntil: 'networkidle' });
+    await page.goto(WARRANTY_URL, { waitUntil: 'domcontentloaded' });
 
     const pdfLink = page.locator('a[href$=".pdf"], a:has-text("Warranty"), a:has-text("Download"), a:has-text("PDF")').first();
     
@@ -448,7 +448,7 @@ test.describe.skip('Electrolux End-to-End Scenario', () => {
       }
     });
 
-    await page.goto(HOME_URL, { waitUntil: 'networkidle' });
+    await page.goto(HOME_URL, { waitUntil: 'domcontentloaded' });
     await searchForKeyword(page, SEARCH_KEYWORD);
     
     const mockProduct = page.locator(`text=${MOCK_PRODUCT_NAME}`);
@@ -462,7 +462,7 @@ test.describe.skip('Electrolux End-to-End Scenario', () => {
       await route.continue();
     });
 
-    await page.goto(SUPPORT_URL, { waitUntil: 'networkidle' });
+    await page.goto(SUPPORT_URL, { waitUntil: 'domcontentloaded' });
     const pdfLink = page.locator('a[href$=".pdf"], a:has-text("Download Manual")').first();
     const pdfHref = await pdfLink.getAttribute('href').catch(() => null);
     
@@ -479,7 +479,7 @@ test.describe.skip('Electrolux End-to-End Scenario', () => {
       await route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ error: 'API failure' }) });
     });
 
-    await page.goto(HOME_URL, { waitUntil: 'networkidle' });
+    await page.goto(HOME_URL, { waitUntil: 'domcontentloaded' });
     await searchForKeyword(page, SEARCH_KEYWORD);
     
     // Either error shows or page loads
@@ -495,7 +495,7 @@ test.describe.skip('Electrolux Edge Cases', () => {
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ products: [] }) });
     });
 
-    //await page.goto(HOME_URL, { waitUntil: 'networkidle', timeout: 60000 });
+    //await page.goto(HOME_URL, { waitUntil: 'domcontentloaded', timeout: 60000 });
     await searchForKeyword(page, SEARCH_NEGATIVE_KEYWORD);
     
     // Check for no results message or empty state
@@ -516,7 +516,7 @@ test.describe.skip('Electrolux Edge Cases', () => {
       await route.fulfill({ status: 200, contentType: 'application/pdf', body: '%%PDF-1.4\n%corrupted content' });
     });
 
-    await page.goto(SUPPORT_URL, { waitUntil: 'networkidle' });
+    await page.goto(SUPPORT_URL, { waitUntil: 'domcontentloaded' });
     const pdfLink = page.locator('a[href$=".pdf"]').first();
     
     if (await pdfLink.count() === 0) {
