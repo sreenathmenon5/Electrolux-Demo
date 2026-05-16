@@ -8,7 +8,7 @@ export class BasePage {
   }
 
   async goto(url: string): Promise<void> {
-    await this.page.goto(url);
+    await this.page.goto(url, {waitUntil: 'domcontentloaded',timeout: 60000});
   }
 
   async waitForElement(locator: Locator, timeout: number = 30000): Promise<void> {
